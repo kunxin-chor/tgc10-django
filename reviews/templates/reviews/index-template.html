@@ -1,0 +1,23 @@
+{% extends 'base.template.html'%}
+
+{% block content%}
+
+<ul class="list-group"></ul>
+{%for each_review in reviews %}
+
+<li class="list-group-item">
+
+    <h5>{{each_review.title}}</h5>
+    <h6>Book: {{each_review.book.title}}</h6>
+    <small>{{each_review.date}}</small>
+    <p>
+        {{each_review.content}}
+    </p>
+    <p>
+        By: {{each_review.owner}}
+    </p>
+</li>
+{% endfor %}
+</ul>
+
+{%endblock%}
