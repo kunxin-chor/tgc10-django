@@ -12,7 +12,10 @@
 
     <ul>
         {%for book in books%}
-        <li>{{book.title}}</li>
+        <li>
+            {{book.title}}
+            <a href="{% url 'update_book' book_id=book.id %}" class="btn btn-primary btn-sm">Update</a>
+        </li>
         {%endfor%}
     </ul>
 {%endblock%}
