@@ -1,5 +1,6 @@
 from django.shortcuts import render, reverse, redirect
 from django.contrib import messages
+from django.db.models import Q
 from .forms import ReviewForm
 from .models import Review
 
@@ -36,3 +37,4 @@ def create_review(request):
         return render(request, 'reviews/create-template.html', {
             'form': create_form
         })
+

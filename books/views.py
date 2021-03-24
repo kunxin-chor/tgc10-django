@@ -2,12 +2,36 @@ from django.contrib import messages
 from .forms import BookForm, PublisherForm
 from .models import Book, Publisher
 from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.db.models import Q
 # Create your views here.
 
 
 # define a view function
 def index(request):
+
     books = Book.objects.all()  # eqv. SELECT * FROM books
+
+    # looks for all books where title contains the sub-string 'ring'
+    # query = Q(title__icontains='dune')
+
+    # search by a relationship
+    # eg. show all books which the category is horror (as an example,
+    # we assume horror is genre id 3)
+    # query = Q(genre__exact=3)
+
+    # search by tags that are id 1 and id 4
+    # query = Q(tags__in=[1, 4])
+
+    # find all books that are in the fantasy genre (id: 2) and
+    # have the tags id 1 and 4
+    # query = Q(genre__exact=2)
+    # query = query & Q(tags__in=[1, 4])
+    
+    # the always true query
+    query = ~Q(pk__in=[])  # will select EVERYTHING
+
+    books = books.filter(query)
+
     return render(request, "books/index-template.html", {
         'books': books
     })
