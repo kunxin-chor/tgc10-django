@@ -1,5 +1,5 @@
 from django.contrib import messages
-from .forms import BookForm, PublisherForm
+from .forms import BookForm, PublisherForm, SearchForm
 from .models import Book, Publisher
 from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.db.models import Q
@@ -9,7 +9,8 @@ from django.db.models import Q
 # define a view function
 def index(request):
 
-    books = Book.objects.all()  # eqv. SELECT * FROM books
+    # populate the form with data submitted via the GET request
+    search_form = SearchForm(request.GET)
 
     # looks for all books where title contains the sub-string 'ring'
     # query = Q(title__icontains='dune')
@@ -26,14 +27,32 @@ def index(request):
     # have the tags id 1 and 4
     # query = Q(genre__exact=2)
     # query = query & Q(tags__in=[1, 4])
-    
-    # the always true query
+
+    # declare a query that get all the books
+    books = Book.objects.all()  # eqv. SELECT * FROM books
+
+    # the always true filtering query
     query = ~Q(pk__in=[])  # will select EVERYTHING
 
-    books = books.filter(query)
+    # if the user fills in the title and is not an empty string
+    if 'title' in request.GET and request.GET['title']:
+        query = query & Q(title__icontains=request.GET['title'])
+
+    # if the user selects a genre and the genre is not empty
+    if 'genre' in request.GET and request.GET['genre']:
+        query = query & Q(genre__exact=request.GET['genre'])
+
+    if 'tags' in request.GET and request.GET['tags']:
+        # we need to use the getlist function to retrieve an array
+        # from the form
+        query = query & Q(tags__in=request.GET.getlist('tags'))
+
+    # we .distinct() so that there are no repeated results
+    books = books.filter(query).values().distinct()
 
     return render(request, "books/index-template.html", {
-        'books': books
+        'books': books,
+        'search_form': search_form
     })
 
 

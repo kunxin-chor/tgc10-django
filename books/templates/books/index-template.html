@@ -1,5 +1,6 @@
 {% extends 'base.template.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {%block content%}
     <h1>Welcome to our Bookshop</h1>
@@ -9,6 +10,11 @@
     {% else %}
     <p>Please <a href="/accounts/login">Login</a></p>
     {%endif%}
+
+    <form method="GET">
+    {{search_form|crispy}}
+    <input type="submit" class="btn btn-primary" value="Search"/>
+    </form>
 
     <ul>
         {%for book in books%}
