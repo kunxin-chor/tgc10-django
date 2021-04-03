@@ -6,7 +6,8 @@ class BookForm(forms.ModelForm):
     class Meta:
         model = Book
         fields = ('title', 'desc', 'ISBN', 'genre',
-                  'tags', 'publisher', 'authors', 'owner')
+                  'tags', 'publisher', 'authors', 'owner',
+                  'image')
 
 
 class PublisherForm(forms.ModelForm):

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from pyuploadcare.dj.models import ImageField
 # Create your models here.
 
 
@@ -31,6 +32,8 @@ class Book(models.Model):
     #  is deleted, then the owner field will automatically become NULL
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
+    image = ImageField(blank=True, manual_crop="")
+    
     def __str__(self):
         return self.title
 
