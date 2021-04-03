@@ -17,6 +17,8 @@
     </form>
     </p>
 
+    <p>Sub-total:${{item.total_cost}}</p>
+
     <a href="{% url 'remove_from_cart' book_id=item.id %}" class="btn btn-danger">Remove</a>
     </li>    
     {% endfor %}

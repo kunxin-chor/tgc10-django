@@ -16,6 +16,8 @@ def add_to_cart(request, book_id):
 
     if book_id in cart:
         cart[book_id]['qty'] += 1
+        cart[book_id]['total_cost'] = int(
+            cart[book_id]['qty']) * float(cart[book_id]['cost'])
     else:
 
         cart[book_id] = {
@@ -23,6 +25,7 @@ def add_to_cart(request, book_id):
             'title': book.title,
             # because decimal cannot be convereted to JSON
             'cost': float(book.cost),
+            'total_cost': float(book.cost),
             'qty': 1
         }
 
@@ -63,7 +66,9 @@ def update_quantity(request, book_id):
     # retrive the shopping cart from session
     cart = request.session.get('shopping_cart', {})
     if book_id in cart:
-        cart[book_id]['qty'] = request.POST['qty']
+        cart[book_id]['qty'] = int(request.POST['qty'])
+        cart[book_id]['total_cost'] = float(
+            cart[book_id]['cost']) * int(request.POST['qty'])
         request.session['shopping_cart'] = cart
         messages.success(request, 'The quantity for the item has changed')
 
