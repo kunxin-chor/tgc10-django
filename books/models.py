@@ -32,6 +32,8 @@ class Book(models.Model):
     #  is deleted, then the owner field will automatically become NULL
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
+    cost = models.DecimalField(max_digits=10, decimal_places=3, blank=False)
+
     # store an image for the book
     image = ImageField(blank=True, manual_crop="")
 

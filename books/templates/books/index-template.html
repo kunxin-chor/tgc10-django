@@ -16,10 +16,11 @@
     <input type="submit" class="btn btn-primary" value="Search"/>
     </form>
 
-    <ul>
+    <ul class="list-group">
         {%for book in books%}
-        <li>
+        <li class="list-group-item">
             <a href="{% url 'view_book_details' book_id=book.id %}">{{book.title}}</a>
+            <a href="{% url 'add_to_cart' book_id=book.id %}" class="btn btn-success btn-sm">Add to Cart</a>
             <a href="{% url 'update_book' book_id=book.id %}" class="btn btn-primary btn-sm">Update</a>
         </li>
         {%endfor%}

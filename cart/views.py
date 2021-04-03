@@ -14,12 +14,17 @@ def add_to_cart(request, book_id):
     # second argument is the criteria
     book = get_object_or_404(Book, pk=book_id)
 
-    cart[book_id] = {
-        'id': book_id,
-        'title': book.title,
-        'cost': 99,
-        'qty': 1
-    }
+    if book_id in cart:
+        cart[book_id]['qty'] += 1
+    else:
+
+        cart[book_id] = {
+            'id': book_id,
+            'title': book.title,
+            # because decimal cannot be convereted to JSON
+            'cost': float(book.cost),
+            'qty': 1
+        }
 
     # save the shopping cart
     request.session['shopping_cart'] = cart
@@ -35,3 +40,31 @@ def view_cart(request):
     return render(request, 'cart/view_cart-template.html', {
         'cart': cart
     })
+
+
+def remove_from_cart(request, book_id):
+    # retrieve the shopping cart from the session
+    cart = request.session.get('shopping_cart', {})
+
+    if book_id in cart:
+        # remove the key represented by id of the book
+        # from the cart dictionary
+        del cart[book_id]
+        # save the cart back to the session
+        request.session['shopping_cart'] = cart
+        messages.success(
+            request, "The item has been removed from the shopping cart")
+
+    return redirect(reverse('view_books'))
+
+
+def update_quantity(request, book_id):
+
+    # retrive the shopping cart from session
+    cart = request.session.get('shopping_cart', {})
+    if book_id in cart:
+        cart[book_id]['qty'] = request.POST['qty']
+        request.session['shopping_cart'] = cart
+        messages.success(request, 'The quantity for the item has changed')
+
+    return redirect(reverse('view_cart'))
