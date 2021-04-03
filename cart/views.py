@@ -26,3 +26,12 @@ def add_to_cart(request, book_id):
 
     messages.success(request, "Book has been added to your shopping cart")
     return redirect(reverse('view_books'))
+
+
+def view_cart(request):
+
+    cart = request.session.get('shopping_cart', {})
+
+    return render(request, 'cart/view_cart-template.html', {
+        'cart': cart
+    })
