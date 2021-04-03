@@ -11,13 +11,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(os.path.join(BASE_DIR), '.env')
+
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 UPLOADCARE = {
     'pub_key': os.environ.get('UPLOADCARE_PUBLIC_KEY'),
@@ -53,7 +54,8 @@ INSTALLED_APPS = [
     'pyuploadcare.dj',
     'books',
     'reviews',
-    'cart'
+    'cart',
+    'checkout'
 ]
 
 MIDDLEWARE = [
@@ -181,3 +183,8 @@ STATICFILES_DIRS = [
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
+
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+STRIPE_SUCCESS_URL = os.environ.get('STRIPE_SUCCESS_URL')
+STRIPE_CANCEL_URL = os.environ.get('STRIPE_CANCEL_URL')

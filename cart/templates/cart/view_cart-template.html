@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>Your Shopping Cart</h1>
+<a href="{% url 'checkout' %}" class="btn btn-success mb-3">Checkout</a>
 <ul class="list-group">
     {% for key, item in cart.items %}
     <li class="list-group-item">
