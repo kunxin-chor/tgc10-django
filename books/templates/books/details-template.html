@@ -1,0 +1,44 @@
+{% extends 'base.template.html' %}
+
+{% block content %}
+<h1>{{book.title}}</h1>
+<ul>
+    <li>ISBN: {{book.ISBN}}</li>
+    <li> Publisher: {{publisher.name}}</li>
+    <li>Genre: {{book.genre}}</li>
+    <li>Authors:
+        <ul>
+            {% for a in book.authors.all %}
+            <li>{{a.first_name}} {{a.last_name}}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li>Tags:
+        {% for t in book.tags.all %}
+        <span class="badge badge-primary">
+            {{t}}
+        </span>
+        {% endfor %}
+    </li>
+</ul>
+
+<h2>
+    Reviews
+    <a class="btn btn-primary" href="{% url 'create_review' book_id=book.id %}">Add Review</a>
+</h2>
+{% for review in book.review_set.all %}
+<div class="card">
+    <h3 class="card-title">{{review.title}}</h3>
+    <div class="card-body">
+        <h5>Reviewed submitted on {{review.date}}</h5>
+
+        <p>
+            {{review.content}}
+        </p>
+        <h5>Submitted by {{review.owner}}</h5>
+    </div>
+
+</div>
+{% endfor %}
+
+{% endblock %}

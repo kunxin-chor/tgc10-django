@@ -1,8 +1,9 @@
-from django.shortcuts import render, reverse, redirect
+from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
 from .forms import ReviewForm
 from .models import Review
+from books.models import Book
 
 
 def show_reviews(request):
@@ -14,7 +15,8 @@ def show_reviews(request):
 # Create your views here.
 
 
-def create_review(request):
+def create_review(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
     if request.method == "POST":
         # first argument is filling in whatever the user provided via
         # the HTML form
@@ -27,6 +29,7 @@ def create_review(request):
             review = form.save(commit=False)
             # request.user will refer to the currently logged in user
             review.owner = request.user
+            review.book = book
             review.save()
             messages.success(request, "New review has been added")
             return redirect(reverse(show_reviews))
@@ -35,5 +38,6 @@ def create_review(request):
         create_form = ReviewForm()
 
         return render(request, 'reviews/create-template.html', {
-            'form': create_form
+            'form': create_form,
+            'book': book
         })

@@ -56,6 +56,13 @@ def index(request):
     })
 
 
+def view_book_details(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    return render(request, 'books/details-template.html', {
+        'book': book
+    })
+
+
 # for adding a new book
 def create_book(request):
     if request.method == 'POST':
