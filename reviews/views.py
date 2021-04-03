@@ -37,4 +37,3 @@ def create_review(request):
         return render(request, 'reviews/create-template.html', {
             'form': create_form
         })
-
