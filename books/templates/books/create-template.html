@@ -1,6 +1,10 @@
 {% extends 'base.template.html' %}
 {% load crispy_forms_tags %}
 
+{% block head %}
+{{form.media}}
+{% endblock %}
+
 {%block content%}
     <h1>Create a new book</h1>
     <form method="POST">
