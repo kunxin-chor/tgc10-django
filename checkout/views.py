@@ -54,6 +54,9 @@ def checkout(request):
         cancel_url=settings.STRIPE_CANCEL_URL
     )
 
+    # remove all items from the shopping cart
+    request.session['shopping_cart'] = {}
+
     return render(request, 'checkout/checkout-template.html', {
         'session_id': session.id,
         'public_key': settings.STRIPE_PUBLISHABLE_KEY
