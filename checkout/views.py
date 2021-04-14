@@ -1,4 +1,5 @@
 from django.shortcuts import render, reverse, HttpResponse, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 # import django settings (meaning the settings.py file)
 from django.conf import settings
@@ -57,3 +58,43 @@ def checkout(request):
         'session_id': session.id,
         'public_key': settings.STRIPE_PUBLISHABLE_KEY
     })
+
+
+# we want to exempt the payment_completed function from CSRF
+@csrf_exempt
+def payment_completed(request):
+    # 1. verify that it is actually from Stripes
+    payload = request.body
+
+    # extract out the signature from the data that Stripes sent us
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+
+    # prepare a variable to store the data that stripe is sending us
+    event = None
+
+    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+
+    # actually do the verification to make the data from the stripe
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        return HttpResponse(status=400)
+    except stripe.error.SigntuareVerificationError as e:
+        # means the data is not from Stripe
+        return HttpResponse(status=400)
+
+    # 2. once we have verified from Stripe, we have
+    # extract out data that Stripe sent us
+    if event['type'] == 'checkout.session.completed':
+
+        # the event represents the payment being completed
+        session = event['data']['object']
+        all_book_ids_str = session['metadata']['all_book_ids']
+        all_book_ids = json.loads(all_book_ids_str)
+        print(all_book_ids)
+
+        print(session)
+        # todo: put in the code to handle successful transaction
+    return HttpResponse(status=200)
